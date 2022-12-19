@@ -43,37 +43,30 @@
   </div>
 </template>
 
-<script>
-import { defineNuxtComponent } from '#app';
+<script setup>
+import { ref, computed } from 'vue';
 
-export default defineNuxtComponent({
-  data: () => ({
-    todoList: [],
-    images: [],
-  }),
-  computed: {
-    numberOfPhotos() {
-      return this.images?.length;
-    },
-    evenAlbums() {
-      return this.images.filter((img) => img.albumId % 2 === 0).length;
-    },
-  },
-  methods: {
-    fetchTodoList() {
-      fetch('https://jsonplaceholder.typicode.com/todos')
-        .then((response) => response.json())
-        .then((json) => {
-          this.todoList = json;
-        });
-    },
-    fetchImages() {
-      fetch('https://jsonplaceholder.typicode.com/photos')
-        .then((response) => response.json())
-        .then((json) => (this.images = json));
-    },
-  },
-});
+const todoList = ref([]);
+const images = ref([]);
+
+const numberOfPhotos = computed(() => todoList.value?.length);
+const evenAlbums = computed(
+  () => images.value?.filter((img) => img.albumId % 2 === 0).length
+);
+
+const fetchTodoList = () => {
+  fetch('https://jsonplaceholder.typicode.com/todos')
+    .then((response) => response.json())
+    .then((json) => {
+      todoList.value = json;
+    });
+};
+
+const fetchImages = () => {
+  fetch('https://jsonplaceholder.typicode.com/photos')
+    .then((response) => response.json())
+    .then((json) => (images.value = json));
+};
 </script>
 
 <style scoped>
